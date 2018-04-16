@@ -1,20 +1,22 @@
 package timer;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import test.TestResult;
 
 public class Picotimer {
 	
+	private static final BigDecimal ZERO = new BigDecimal("0");
 	private static final BigInteger THOUSAND = new BigInteger("1000");
-	private static final BigInteger BILLION = new BigInteger("1000000000");
+	private static final BigDecimal BILLION = new BigDecimal("1000000000");
 
 	
-	private BigInteger timeCounter;
+	private BigDecimal timeCounter;
 	private boolean lock;
 	
 	public Picotimer(BigInteger picoseconds) {
-		timeCounter = picoseconds.divide(BILLION);
+		timeCounter = new BigDecimal(picoseconds).divide(BILLION);
 	}
 	
 	public void start(Runnable futureTask) {
@@ -31,9 +33,9 @@ public class Picotimer {
 	}
 	
 	private void proceed(Runnable futureTask) {
-		while( ! lock && timeCounter.compareTo(Milliloop.ZERO) > -1) {
+		while( ! lock && timeCounter.compareTo(ZERO) > -1) {
 			//System.out.println(timeCounter);
-			timeCounter = timeCounter.subtract(new BigInteger(Long.toString(Milliloop.go(THOUSAND))));
+			timeCounter = timeCounter.subtract(new BigDecimal(Milliloop.go(THOUSAND)));
 		}
 		finish(futureTask);
 	}
